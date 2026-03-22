@@ -93,6 +93,10 @@ async function readAllResults(leconFilter = '') {
 //  ╚═══════════════════════════════════════════════════════════════════════╝
 
 const LECONS = {
+
+  // ─────────────────────────────────────────────────────────────────
+  //  LEÇON 1 — أسماء الإشارة  (Pronoms démonstratifs)
+  // ─────────────────────────────────────────────────────────────────
   lecon1: {
     titre: 'Leçon 1 — أسماء الإشارة',
     questions: [
@@ -159,18 +163,642 @@ const LECONS = {
     ],
   },
 
-  // lecon2: {
-  //   titre: 'Leçon 2 — ...',
-  //   questions: [
-  //     {
-  //       enonce:      'Question ?',
-  //       options:     [['الخيار أ'], ['الخيار ب'], ['الخيار ج']],
-  //       reponse:     0,
-  //       explication: 'Explication ✅',
-  //     },
-  //   ],
-  // },
+  // ─────────────────────────────────────────────────────────────────
+  //  LEÇON 2 — أدوات الاستفهام  (Mots interrogatifs)
+  // ─────────────────────────────────────────────────────────────────
+  lecon2: {
+    titre: 'Leçon 2 — أدوات الاستفهام',
+    questions: [
+      {
+        enonce:      'Quel mot interrogatif utilises-tu pour demander **qui** (une personne) ?',
+        options:     [['مَا'], ['مَنْ'], ['أَيْنَ']],
+        reponse:     1,
+        explication: '**مَنْ** = qui (pour les personnes) ✅  Exemple : مَنْ هُوَ؟ — Qui est-il ?',
+      },
+      {
+        enonce:      'Quel mot interrogatif utilises-tu pour demander **quoi / qu\'est-ce que** (un objet) ?',
+        options:     [['مَنْ'], ['مَا'], ['كَيْفَ']],
+        reponse:     1,
+        explication: '**مَا** = quoi / qu\'est-ce que (pour les choses) ✅  Exemple : مَا هَذَا؟',
+      },
+      {
+        enonce:      'Quel mot interrogatif utilises-tu pour demander **où** ?',
+        options:     [['مَتَى'], ['أَيْنَ'], ['كَمْ']],
+        reponse:     1,
+        explication: '**أَيْنَ** = où ✅  Exemple : أَيْنَ سُفْيَانُ؟ — Où est Sufyân ?',
+      },
+      {
+        enonce:      'Quel mot interrogatif utilises-tu pour demander **quand** ?',
+        options:     [['أَيْنَ'], ['لِمَاذَا'], ['مَتَى']],
+        reponse:     2,
+        explication: '**مَتَى** = quand ✅  Exemple : مَتَى تَرْجِعُ؟ — Quand reviens-tu ?',
+      },
+      {
+        enonce:      'Quel mot interrogatif utilises-tu pour demander **combien** (nombre) ?',
+        options:     [['بِكَمْ'], ['كَمْ'], ['هَلْ']],
+        reponse:     1,
+        explication: '**كَمْ** = combien (quantité) ✅  Exemple : كَمْ دَرْسًا دَرَسْتَ؟',
+      },
+      {
+        enonce:      'Quel mot interrogatif utilises-tu pour demander **combien ça coûte** (prix) ?',
+        options:     [['كَمْ'], ['بِكَمْ'], ['مَاذَا']],
+        reponse:     1,
+        explication: '**بِكَمْ** = combien (prix) ✅  Exemple : بِكَمْ هَذَا؟ — C\'est à combien ?',
+      },
+      {
+        enonce:      'Quel mot interrogatif utilises-tu pour demander **pourquoi** ?',
+        options:     [['مَاذَا'], ['لِمَاذَا'], ['هَلْ']],
+        reponse:     1,
+        explication: '**لِمَاذَا** = pourquoi ✅  Exemple : لِمَاذَا فَعَلْتَ هَذَا؟',
+      },
+      {
+        enonce:      'Quel mot interrogatif utilises-tu pour poser une **question oui/non** ?',
+        options:     [['هَلْ  /  أَ'], ['مَنْ'], ['كَيْفَ']],
+        reponse:     0,
+        explication: '**هَلْ** et **أَ** = questions oui/non ✅  Exemples : هَلْ تَعْرِفُ هَذَا؟  /  أَهُوَ مُسْلِمٌ؟',
+      },
+      {
+        enonce:      'Quel mot interrogatif utilises-tu pour demander **comment** ?',
+        options:     [['مَتَى'], ['أَيْنَ'], ['كَيْفَ']],
+        reponse:     2,
+        explication: '**كَيْفَ** = comment ✅  Exemple : كَيْفَ حَالُكَ؟ — Comment vas-tu ?',
+      },
+      {
+        enonce:      'Quelle est la différence entre **مَا** et **مَاذَا** ?',
+        options:     [['مَا = quoi  /  مَاذَا = que (+ verbe)'], ['Aucune différence'], ['مَا = où  /  مَاذَا = quand']],
+        reponse:     0,
+        explication: '**مَا هَذَا؟** (Qu\'est-ce que c\'est ?) vs **مَاذَا تَفْعَلُ؟** (Que fais-tu ?) ✅',
+      },
+    ],
+  },
+
+  // ─────────────────────────────────────────────────────────────────
+  //  LEÇON 3 — الممنوع من الصرف  (Diptotes)
+  // ─────────────────────────────────────────────────────────────────
+  lecon3: {
+    titre: 'Leçon 3 — الممنوع من الصرف',
+    questions: [
+      {
+        enonce:      'Le mot **مَدَارِسُ** (écoles) prend-il le tanwīn ?',
+        options:     [['❌ لَا — c\'est un diptote (صيغة منتهى الجموع)'], ['✅ نَعَمْ'], ['Seulement au nominatif']],
+        reponse:     0,
+        explication: '**مَدَارِسُ** est sur le schème صيغة منتهى الجموع → ممنوع من الصرف → pas de tanwīn ✅',
+      },
+      {
+        enonce:      'Parmi ces prénoms, lequel est **ممنوع من الصرف** (diptote) ?',
+        options:     [['مُحَمَّدٌ'], ['فَاطِمَةُ'], ['إِبْرَاهِيمُ']],
+        reponse:     2,
+        explication: '**إِبْرَاهِيمُ** est diptote car c\'est un prénom non-arabe (أعجمي) ✅',
+      },
+      {
+        enonce:      'Pourquoi **فَاطِمَةُ** est-il ممنوع من الصرف ?',
+        options:     [['C\'est un prénom étranger'], ['C\'est un prénom féminin (علم مؤنث)'], ['C\'est un pluriel brisé']],
+        reponse:     1,
+        explication: '**فَاطِمَةُ** = علم مؤنث (prénom féminin) → ممنوع من الصرف ✅',
+      },
+      {
+        enonce:      'Le mot **أَحْمَرُ** (rouge) est diptote car il est sur le schème ?',
+        options:     [['فَعْلَانُ'], ['أَفْعَلُ'], ['فَعِيلٌ']],
+        reponse:     1,
+        explication: '**أَفْعَلُ** = schème des couleurs et défauts → ممنوع من الصرف ✅  (أَحْمَرُ، أَخْضَرُ، أَزْرَقُ…)',
+      },
+      {
+        enonce:      'Le mot **عَطْشَانُ** (assoiffé) est diptote car il est sur le schème ?',
+        options:     [['أَفْعَلُ'], ['فَعْلَانُ'], ['فُعَلَاءُ']],
+        reponse:     1,
+        explication: '**فَعْلَانُ** = schème des adjectifs d\'état → ممنوع من الصرف ✅  (عَطْشَانُ، جَوْعَانُ، كَسْلَانُ…)',
+      },
+      {
+        enonce:      'Parmi ces mots, lequel prend normalement le tanwīn (n\'est PAS diptote) ?',
+        options:     [['أَطِبَّاءُ'], ['كِتَابٌ'], ['مَسَاجِدُ']],
+        reponse:     1,
+        explication: '**كِتَابٌ** = mot ordinaire → prend le tanwīn ✅  Les deux autres sont des diptotes.',
+      },
+      {
+        enonce:      'Le mot **أَصْدِقَاءُ** (amis) est diptote à cause de ?',
+        options:     [['La hamza du madūd (همزة الممدود الزائدة)'], ['C\'est un prénom'], ['C\'est sur le schème أَفْعَلُ']],
+        reponse:     0,
+        explication: '**أَصْدِقَاءُ** = همزة الممدود الزائدة → ممنوع من الصرف ✅  (أَغْنِيَاءُ، أَقْوِيَاءُ…)',
+      },
+      {
+        enonce:      'Comment reconnaît-on la **صيغة منتهى الجموع** (pluriel brisé diptote) ?',
+        options:     [['Pluriel brisé avec alif + 2 ou 3 lettres après'], ['Mot se terminant par ة'], ['Tout pluriel masculin']],
+        reponse:     0,
+        explication: 'Tout pluriel brisé contenant une alif avec 2 ou 3 lettres après elle → ممنوع ✅  (مَدَارِسُ، مَسَاجِدُ، مَكَاتِبُ…)',
+      },
+      {
+        enonce:      'Un mot ممنوع من الصرف prend la kasra au génitif — vrai ou faux ?',
+        options:     [['❌ فَاسِدٌ — il prend la فتحة au génitif'], ['✅ صَحِيحٌ'], ['Seulement avec أل']],
+        reponse:     0,
+        explication: '**FAUX** ! Sans أل, le ممنوع من الصرف prend la **فتحة** aux cas génitif ET accusatif, jamais la kasra ✅',
+      },
+      {
+        enonce:      'Avec l\'article **أل** ou en état construit (إضافة), le diptote reprend le tanwīn ?',
+        options:     [['❌ Non, il reprend les voyelles normales mais toujours sans tanwīn'], ['✅ Oui, il reprend tout'], ['Seulement le tanwīn kasra']],
+        reponse:     0,
+        explication: 'Avec أل ou en إضافة → le diptote se comporte **normalement** (kasra au génitif) mais toujours sans tanwīn ✅',
+      },
+    ],
+  },
+
+  // ─────────────────────────────────────────────────────────────────
+  //  LEÇON 4 — الجملة الاسمية  (Phrase nominale)
+  // ─────────────────────────────────────────────────────────────────
+  lecon4: {
+    titre: 'Leçon 4 — الجملة الاسمية',
+    questions: [
+      {
+        enonce:      'La phrase nominale (جملة اسمية) est composée de ?',
+        options:     [['مبتدأ + خبر'], ['فعل + فاعل'], ['حرف + اسم']],
+        reponse:     0,
+        explication: '**مبتدأ** (sujet) + **خبر** (prédicat) = الجملة الاسمية ✅',
+      },
+      {
+        enonce:      'Dans **الكِتَابُ جَدِيدٌ**, quel est le خبر ?',
+        options:     [['الكِتَابُ'], ['جَدِيدٌ'], ['Les deux']],
+        reponse:     1,
+        explication: '**جَدِيدٌ** = خبر مفرد (prédicat simple) ✅  الكتابُ = مبتدأ',
+      },
+      {
+        enonce:      'Dans **الكِتَابُ لَوْنُهُ أَزْرَقُ**, le خبر est ?',
+        options:     [['خبر مفرد'], ['خبر جملة اسمية'], ['خبر شبه جملة']],
+        reponse:     1,
+        explication: '**لَوْنُهُ أَزْرَقُ** = خبر جملة اسمية (le prédicat est lui-même une phrase nominale) ✅',
+      },
+      {
+        enonce:      'Dans **زَيْدٌ فِي الْبَيْتِ**, le خبر est ?',
+        options:     [['خبر مفرد'], ['خبر جملة فعلية'], ['خبر شبه جملة — جار ومجرور']],
+        reponse:     2,
+        explication: '**فِي الْبَيْتِ** = جار ومجرور → خبر شبه جملة ✅',
+      },
+      {
+        enonce:      'Dans **الكِتَابُ فَوْقَ الْمَكْتَبِ**, le خبر est ?',
+        options:     [['خبر شبه جملة — ظرف ومضاف إليه'], ['خبر مفرد'], ['خبر جملة فعلية']],
+        reponse:     0,
+        explication: '**فَوْقَ الْمَكْتَبِ** = ظرف مكان → خبر شبه جملة (ظرف ومضاف إليه) ✅',
+      },
+      {
+        enonce:      'Parmi les حروف الجر, lequel n\'en fait PAS partie ?',
+        options:     [['فِي'], ['إِلَى'], ['فَوْقَ']],
+        reponse:     2,
+        explication: '**فَوْقَ** est un ظرف (adverbe de lieu), pas un حرف جر. Les حروف الجر : في / إلى / مِنْ / عَلَى ✅',
+      },
+      {
+        enonce:      'Parmi les ظروف, lequel n\'en fait PAS partie ?',
+        options:     [['قَبْلَ'], ['مِنْ'], ['بَعْدَ']],
+        reponse:     1,
+        explication: '**مِنْ** est un حرف جر. Les ظروف : قَبْلَ / بَعْدَ / فَوْقَ / تَحْتَ ✅',
+      },
+      {
+        enonce:      'Dans **الطَّالِبُ كَتَبَ الدَّرْسَ**, le خبر est ?',
+        options:     [['خبر مفرد'], ['خبر جملة فعلية'], ['خبر شبه جملة']],
+        reponse:     1,
+        explication: '**كَتَبَ الدَّرْسَ** = جملة فعلية → خبر جملة فعلية ✅',
+      },
+      {
+        enonce:      'Le مبتدأ est toujours au cas ?',
+        options:     [['النصب (accusatif)'], ['الرفع (nominatif)'], ['الجر (génitif)']],
+        reponse:     1,
+        explication: 'Le **مبتدأ** est toujours **مرفوع** (nominatif) ✅  Même chose pour le خبر مفرد.',
+      },
+      {
+        enonce:      'Combien de types de خبر existent dans le cours ?',
+        options:     [['2'], ['3'], ['5']],
+        reponse:     2,
+        explication: 'Il y a **5** types de خبر : ① مفرد ② جملة اسمية ③ جملة فعلية ④ جار ومجرور ⑤ ظرف ومضاف إليه ✅',
+      },
+    ],
+  },
+
+  // ─────────────────────────────────────────────────────────────────
+  //  LEÇON 5 — الأسماء الموصولة  (Pronoms relatifs)
+  // ─────────────────────────────────────────────────────────────────
+  lecon5: {
+    titre: 'Leçon 5 — الأسماء الموصولة',
+    questions: [
+      {
+        enonce:      'Quel pronom relatif utilises-tu pour un **singulier masculin** ?',
+        options:     [['الَّتِي'], ['الَّذِي'], ['الَّذِينَ']],
+        reponse:     1,
+        explication: '**الَّذِي** = singulier masculin (doué de raison OU non) ✅  Ex : الطَّالِبُ الَّذِي…',
+      },
+      {
+        enonce:      'Quel pronom relatif utilises-tu pour un **singulier féminin** ?',
+        options:     [['الَّذِي'], ['اللَّتَانِ'], ['الَّتِي']],
+        reponse:     2,
+        explication: '**الَّتِي** = singulier féminin ✅  Ex : الْبِنْتُ الَّتِي… / الْقِصَّةُ الَّتِي…',
+      },
+      {
+        enonce:      'Quel pronom relatif utilises-tu pour un **pluriel non-humain** (objets, animaux) ?',
+        options:     [['الَّذِينَ'], ['الَّتِي'], ['اللَّاتِي']],
+        reponse:     1,
+        explication: '**الَّتِي** = aussi pour le pluriel non-humain ! Même forme qu\'au singulier féminin ✅',
+      },
+      {
+        enonce:      'Quel pronom relatif utilises-tu pour un **duel masculin** ?',
+        options:     [['اللَّذَانِ'], ['اللَّتَانِ'], ['الَّذِينَ']],
+        reponse:     0,
+        explication: '**اللَّذَانِ** = duel masculin ✅  Ex : الطَّالِبَانِ اللَّذَانِ…',
+      },
+      {
+        enonce:      'Quel pronom relatif utilises-tu pour un **duel féminin** ?',
+        options:     [['اللَّذَانِ'], ['اللَّتَانِ'], ['اللَّاتِي']],
+        reponse:     1,
+        explication: '**اللَّتَانِ** = duel féminin ✅  Ex : الْبِنْتَانِ اللَّتَانِ…',
+      },
+      {
+        enonce:      'Quel pronom relatif utilises-tu pour un **pluriel masculin humain** ?',
+        options:     [['الَّتِي'], ['اللَّاتِي'], ['الَّذِينَ']],
+        reponse:     2,
+        explication: '**الَّذِينَ** = pluriel masculin humain ✅  Ex : الطُّلَّابُ الَّذِينَ…',
+      },
+      {
+        enonce:      'Quel pronom relatif utilises-tu pour un **pluriel féminin** (humaines ou objets féminins) ?',
+        options:     [['الَّذِينَ'], ['اللَّاتِي  /  اللَّائِي'], ['اللَّذَانِ']],
+        reponse:     1,
+        explication: '**اللَّاتِي** ou **اللَّائِي** = pluriel féminin ✅  Ex : الطَّالِبَاتُ اللَّاتِي…',
+      },
+      {
+        enonce:      'Le pronom relatif s\'accorde avec ?',
+        options:     [['Le verbe qui suit'], ['Le nom qu\'il qualifie (nombre et genre)'], ['Le sujet de la phrase']],
+        reponse:     1,
+        explication: 'Le اسم موصول s\'accorde en **nombre et genre** avec le nom qu\'il qualifie (المنعوت) ✅',
+      },
+      {
+        enonce:      'Complète : **الطَّائِرَاتُ _____ طَارَتْ** (les avions qui ont volé)',
+        options:     [['الَّذِينَ'], ['الَّتِي'], ['اللَّذَانِ']],
+        reponse:     1,
+        explication: '**الَّتِي** — طائرات = pluriel non-humain → même règle que singulier féminin ✅',
+      },
+      {
+        enonce:      'La phrase relative qui suit le اسم موصول s\'appelle ?',
+        options:     [['الصِّلَة'], ['الْخَبَر'], ['الْمُبْتَدَأ']],
+        reponse:     0,
+        explication: '**الصِّلَة** = la proposition relative qui suit le pronom ✅  Elle doit contenir un pronom de rappel (العائد).',
+      },
+    ],
+  },
+
+  // ─────────────────────────────────────────────────────────────────
+  //  LEÇON 6 — الضمائر  (Pronoms personnels)
+  // ─────────────────────────────────────────────────────────────────
+  lecon6: {
+    titre: 'Leçon 6 — الضمائر',
+    questions: [
+      {
+        enonce:      'Quel est le pronom détaché pour **"je"** ?',
+        options:     [['نَحْنُ'], ['أَنَا'], ['هُوَ']],
+        reponse:     1,
+        explication: '**أَنَا** = je ✅  Ex : أَنَا دَرَسْتُ',
+      },
+      {
+        enonce:      'Quel est le pronom détaché pour **"nous"** ?',
+        options:     [['أَنْتُمْ'], ['نَحْنُ'], ['هُمْ']],
+        reponse:     1,
+        explication: '**نَحْنُ** = nous ✅  Ex : نَحْنُ دَرَسْنَا',
+      },
+      {
+        enonce:      'Quel est le pronom détaché pour **"tu"** (masculin) ?',
+        options:     [['أَنْتِ'], ['أَنْتُمَا'], ['أَنْتَ']],
+        reponse:     2,
+        explication: '**أَنْتَ** = tu (masculin) ✅  — **أَنْتِ** = tu (féminin)',
+      },
+      {
+        enonce:      'Quel est le pronom détaché pour **"vous deux"** (duel) ?',
+        options:     [['أَنْتُمْ'], ['أَنْتُمَا'], ['أَنْتُنَّ']],
+        reponse:     1,
+        explication: '**أَنْتُمَا** = vous deux (duel, masc. ou fém.) ✅  Ex : أَنْتُمَا دَرَسْتُمَا',
+      },
+      {
+        enonce:      'Quel pronom utilises-tu pour **"elles"** (pluriel féminin) ?',
+        options:     [['هُمْ'], ['هُوَ'], ['هُنَّ']],
+        reponse:     2,
+        explication: '**هُنَّ** = elles ✅  — هُمْ = ils — هُوَ = il — هِيَ = elle',
+      },
+      {
+        enonce:      'Dans **قَلَمِي** (mon stylo), quel est le pronom attaché ?',
+        options:     [['كَ'], ['ي'], ['هُ']],
+        reponse:     1,
+        explication: '**ي** = pronom de 1ère personne singulier (mon/ma/mes) ✅  Ex : كِتَابِي، قَلَمِي',
+      },
+      {
+        enonce:      'Dans **قَلَمُكَ** (ton stylo — masc.), quel est le pronom attaché ?',
+        options:     [['كَ'], ['كِ'], ['هُ']],
+        reponse:     0,
+        explication: '**كَ** = ton/ta (masculin) ✅  — **كِ** = ton/ta (féminin)',
+      },
+      {
+        enonce:      'Dans **قَلَمُهُ** (son stylo — à lui), quel est le pronom attaché ?',
+        options:     [['هَا'], ['هُ'], ['هُمَا']],
+        reponse:     1,
+        explication: '**هُ** = son (à lui) ✅  — **هَا** = son (à elle)',
+      },
+      {
+        enonce:      'Dans **فِيكَ** (en toi — masc.), quelle est la préposition utilisée ?',
+        options:     [['مِنْ'], ['إِلَى'], ['فِي']],
+        reponse:     2,
+        explication: '**فِي** = dans/en ✅  Le pronom كَ se fixe après : فِيكَ, فِيكِ, فِيهِ, فِيهَا…',
+      },
+      {
+        enonce:      'Combien de pronoms détachés (ضمائر منفصلة) y a-t-il dans le tableau de la leçon ?',
+        options:     [['10'], ['12'], ['13']],
+        reponse:     2,
+        explication: '**13** pronoms : أنا / نحن / أنتَ / أنتِ / أنتما / أنتم / أنتنَّ / هو / هي / هما / هما / هم / هنَّ ✅',
+      },
+    ],
+  },
+
+  // ─────────────────────────────────────────────────────────────────
+  //  LEÇON 7 — بعض الدروس  (Lettres lunaires/solaires + Défini/Indéfini + Vocatif)
+  // ─────────────────────────────────────────────────────────────────
+  lecon7: {
+    titre: 'Leçon 7 — الحروف القمرية والشمسية / النكرة والمعرفة / المنادى',
+    questions: [
+      {
+        enonce:      'Avec **أل** + lettre **قمرية**, le ل se prononce ?',
+        options:     [['Il s\'assimile à la lettre suivante'], ['Il se prononce normalement (لْ)'], ['Il disparaît']],
+        reponse:     1,
+        explication: 'Lettre قمرية → **أل** se prononce normalement : اَلْبَابُ, اَلْقَمَرُ, اَلْكِتَابُ ✅',
+      },
+      {
+        enonce:      'Avec **أل** + lettre **شمسية**, le ل se prononce ?',
+        options:     [['Normalement'], ['Il s\'assimile (shadda sur la lettre suivante)'], ['Il disparaît complètement']],
+        reponse:     1,
+        explication: 'Lettre شمسية → le ل s\'assimile : اَلشَّمْسُ (al-shams → ash-shams) ✅',
+      },
+      {
+        enonce:      'La lettre **ب** est-elle قمرية ou شمسية ?',
+        options:     [['شمسية'], ['قمرية'], ['Les deux selon le mot']],
+        reponse:     1,
+        explication: '**ب** est قمرية ✅  → اَلْبَابُ (le ل se prononce)',
+      },
+      {
+        enonce:      'La lettre **شـ** est-elle قمرية ou شمسية ?',
+        options:     [['قمرية'], ['شمسية'], ['Ni l\'un ni l\'autre']],
+        reponse:     1,
+        explication: '**شـ** est شمسية ✅  → اَلشَّمْسُ (le ل s\'assimile)',
+      },
+      {
+        enonce:      'Le mot **بَيْتٌ** (sans أل) est ?',
+        options:     [['مَعْرِفَة (défini)'], ['نَكِرَة (indéfini)'], ['Les deux']],
+        reponse:     1,
+        explication: '**بَيْتٌ** avec tanwīn = **نكرة** (indéfini) ✅  → اَلْبَيْتُ = معرفة (défini)',
+      },
+      {
+        enonce:      'Le mot **بَيْتُ الطَّالِبِ** (la maison de l\'étudiant) est ?',
+        options:     [['نكرة'], ['معرفة بالإضافة'], ['معرفة بأل']],
+        reponse:     1,
+        explication: '**بَيْتُ الطَّالِبِ** = **معرفة بالإضافة** (défini par annexion) ✅',
+      },
+      {
+        enonce:      'Pour appeler quelqu\'un par son prénom (يا + علم مفرد), la voyelle finale est ?',
+        options:     [['كَسْرَة (ِ)'], ['فَتْحَة (َ)'], ['ضَمَّة (ُ)']],
+        reponse:     2,
+        explication: '**يَا زَيْدُ** — le منادى علم مفرد est **مبني على الضم** ✅  Idem pour les prénoms féminins : يَا فَاطِمَةُ',
+      },
+      {
+        enonce:      'Pour appeler quelqu\'un par sa fonction (يَا + نكرة مقصودة), la voyelle finale est ?',
+        options:     [['ضَمَّة'], ['فَتْحَة'], ['كَسْرَة']],
+        reponse:     0,
+        explication: '**يَا أُسْتَاذُ** — النكرة المقصودة est aussi **مبنية على الضم** ✅  (يَا أُسْتَاذَةُ pour le féminin)',
+      },
+      {
+        enonce:      'Combien y a-t-il de lettres **قمرية** ?',
+        options:     [['12'], ['14'], ['16']],
+        reponse:     1,
+        explication: 'Il y a **14 lettres قمرية** : أ ب ج ح خ ع غ ف ق ك م ه و ي ✅',
+      },
+      {
+        enonce:      'Combien y a-t-il de lettres **شمسية** ?',
+        options:     [['12'], ['14'], ['10']],
+        reponse:     1,
+        explication: 'Il y a **14 lettres شمسية** : ت ث د ذ ر ز س ش ص ض ط ظ ل ن ✅',
+      },
+    ],
+  },
+
+  // ─────────────────────────────────────────────────────────────────
+  //  LEÇON 8 — النعت والمنعوت + العدد  (Adjectif qualificatif + Nombres 3-10)
+  // ─────────────────────────────────────────────────────────────────
+  lecon8: {
+    titre: 'Leçon 8 — النعت والمنعوت / العدد',
+    questions: [
+      {
+        enonce:      'Dans **جَاءَ الطَّالِبُ الْمُجْتَهِدُ**, quel est le نعت (adjectif) ?',
+        options:     [['الطَّالِبُ'], ['الْمُجْتَهِدُ'], ['جَاءَ']],
+        reponse:     1,
+        explication: '**الْمُجْتَهِدُ** = le نعت (adjectif épithète) ✅  الطَّالِبُ = المنعوت (nom qualifié)',
+      },
+      {
+        enonce:      'Le نعت s\'accorde avec le منعوت en ?',
+        options:     [['Genre et nombre uniquement'], ['Genre, nombre, cas et définitude'], ['Cas uniquement']],
+        reponse:     1,
+        explication: 'Le **نعت** s\'accorde en **genre + nombre + cas + définitude** avec le منعوت ✅',
+      },
+      {
+        enonce:      'Dans **رَأَيْتُ الطَّالِبَةَ الْمُجْتَهِدَةَ**, pourquoi le نعت est au féminin ?',
+        options:     [['Le verbe رَأَيْتُ l\'exige'], ['Il s\'accorde avec الطَّالِبَة (féminin)'], ['C\'est toujours au féminin']],
+        reponse:     1,
+        explication: '**الْمُجْتَهِدَةَ** = féminin car الطَّالِبَة est féminin → accord obligatoire ✅',
+      },
+      {
+        enonce:      'Pour les nombres **3 à 10**, le nombre est du genre **opposé** au compté — vrai ou faux ?',
+        options:     [['✅ صَحِيحٌ — le nombre contredit le compté'], ['❌ فَاسِدٌ — même genre'], ['Seulement pour 3 et 4']],
+        reponse:     0,
+        explication: '**VRAI** ! 3 filles = **ثَلَاثَةُ** بَنَاتٍ (ثلاثة masc. + بنات fém.) → inversion systématique 3-10 ✅',
+      },
+      {
+        enonce:      'Comment dit-on **"trois étudiants"** ?',
+        options:     [['ثَلَاثُ طُلَّابٍ'], ['ثَلَاثَةُ طُلَّابٍ'], ['ثَلَاثَةٌ طُلَّاب']],
+        reponse:     1,
+        explication: '**ثَلَاثَةُ طُلَّابٍ** : طلاب est masculin → on utilise ثَلَاثَة (féminin) par inversion + الإضافة ✅',
+      },
+      {
+        enonce:      'Comment dit-on **"quatre étudiantes"** ?',
+        options:     [['أَرْبَعَةُ طَالِبَاتٍ'], ['أَرْبَعُ طَالِبَاتٍ'], ['أَرْبَعٌ طَالِبَاتٌ']],
+        reponse:     1,
+        explication: '**أَرْبَعُ طَالِبَاتٍ** : طالبات est féminin → on utilise أَرْبَع (masculin, sans ة) par inversion ✅',
+      },
+      {
+        enonce:      'Le compté (المعدود) avec les nombres 3-10 est toujours au ?',
+        options:     [['Singulier مرفوع'], ['Pluriel مجرور (مضاف إليه)'], ['Duel مرفوع']],
+        reponse:     1,
+        explication: 'Le المعدود est au **جمع مجرور** (pluriel génitif) car il est مضاف إليه ✅  Ex : ثَلَاثَةُ **طُلَّابٍ**',
+      },
+      {
+        enonce:      'Dans **سَلَّمْتُ عَلَى الطَّالِبَاتِ الْمُجْتَهِدَاتِ**, le نعت est au cas ?',
+        options:     [['مرفوع (nominatif)'], ['مجرور (génitif)'], ['منصوب (accusatif)']],
+        reponse:     1,
+        explication: '**الْمُجْتَهِدَاتِ** = مجرور car الطَّالِبَاتِ est مجرور (après عَلَى) → accord du cas ✅',
+      },
+      {
+        enonce:      'Le نعت doit-il suivre immédiatement le منعوت ?',
+        options:     [['Oui, toujours'], ['Non, d\'autres éléments peuvent s\'intercaler'], ['Seulement en phrase nominale']],
+        reponse:     0,
+        explication: 'Le **نعت** suit directement le **منعوت** ✅  Il vient toujours juste après le nom qu\'il qualifie.',
+      },
+      {
+        enonce:      'Quel est le pluriel de **مُجْتَهِدٌ** (masculin) utilisé en النعت ?',
+        options:     [['مُجْتَهِدَاتٌ'], ['مُجْتَهِدُونَ'], ['مُجْتَهِدَةٌ']],
+        reponse:     1,
+        explication: '**مُجْتَهِدُونَ** = pluriel masculin de مُجْتَهِدٌ ✅  — مُجْتَهِدَاتٌ = pluriel féminin',
+      },
+    ],
+  },
+
+  // ─────────────────────────────────────────────────────────────────
+  //  LEÇON 9 — بعض القواعد  (Règles diverses)
+  // ─────────────────────────────────────────────────────────────────
+  lecon9: {
+    titre: 'Leçon 9 — بعض القواعد',
+    questions: [
+      {
+        enonce:      'Pour former le **duel** d\'un nom masculin singulier, on ajoute ?',
+        options:     [['وْنَ'], ['اَنِ / يْنِ'], ['اَتٌ']],
+        reponse:     1,
+        explication: '**اَنِ** au nominatif / **يْنِ** aux autres cas ✅  Ex : طَالِبٌ → طَالِبَانِ / طَالِبَيْنِ',
+      },
+      {
+        enonce:      'Pour former le **duel** d\'un nom féminin en ة, que devient la ة ?',
+        options:     [['Elle reste ة'], ['Elle devient ت'], ['Elle disparaît']],
+        reponse:     1,
+        explication: 'La **ة devient ت** avant la désinence du duel ✅  Ex : طَالِبَةٌ → طَالِبَتَانِ',
+      },
+      {
+        enonce:      'Dans **جَاءَ هَذَا الطَّالِبُ**, pourquoi الطَّالِبُ est-il **بدل** (apposition) ?',
+        options:     [['Il est le sujet de جاء'], ['Il précise هذا qui y fait référence'], ['C\'est un adjectif']],
+        reponse:     1,
+        explication: 'الطَّالِبُ = **بدل** car il précise le pronom démonstratif هذا → الإشارة إلى المعرَّف ب(أل) ✅',
+      },
+      {
+        enonce:      'Comment exprime-t-on **"j\'ai un livre"** en arabe ?',
+        options:     [['أَنَا كِتَابٌ'], ['عِنْدِي كِتَابٌ'], ['لِي أَنَا كِتَابٌ']],
+        reponse:     1,
+        explication: '**عِنْدِي كِتَابٌ** = j\'ai un livre (possession physique) ✅  عند + pronom attaché',
+      },
+      {
+        enonce:      'Quelle est la différence entre **عِنْدِي** et **لِي** ?',
+        options:     [['Aucune différence'], ['عندي = j\'ai (proche, physique) / لي = j\'ai (appartenance générale)'], ['لي = verbe / عندي = nom']],
+        reponse:     1,
+        explication: '**عِنْدِي** = possession physique/proche ✅  **لِي** = appartenance (ex: لِي أَخٌ = j\'ai un frère)',
+      },
+      {
+        enonce:      'Le tâ marbûta féminin **change le verbe** qui précède — vrai ou faux ?',
+        options:     [['✅ نَعَمْ — le verbe prend تَأْنِيث'], ['❌ لَا — le verbe ne change pas'], ['Seulement au passé']],
+        reponse:     0,
+        explication: '**VRAI** ! Si le sujet est féminin → le verbe prend ـَتْ : كَتَبَتْ فَاطِمَةُ ✅  (تأنيث الفاعل)',
+      },
+      {
+        enonce:      '**مَعَ** se construit avec ?',
+        options:     [['Un pronom seul'], ['Un مضاف إليه (nom au génitif ou pronom attaché)'], ['Un verbe']],
+        reponse:     1,
+        explication: '**مَعَ** + مضاف إليه ✅  Ex : مَعَ الطَّالِبِ / مَعِي / مَعَكَ',
+      },
+      {
+        enonce:      '**لِمَنْ** هَذَا الْكِتَابُ؟ — que signifie لِمَنْ ?',
+        options:     [['Où est ?'], ['À qui est ?'], ['Comment ?']],
+        reponse:     1,
+        explication: '**لِمَنْ** = à qui ✅  لِ (préposition) + مَنْ (qui)',
+      },
+      {
+        enonce:      '**أَيٌّ** se construit avec ?',
+        options:     [['أَيٌّ + nom doué de raison seulement'], ['أَيٌّ + nom (doué ou non de raison)'], ['Toujours seul']],
+        reponse:     1,
+        explication: '**أَيٌّ** = lequel (masc.) / **أَيَّةٌ** = laquelle → s\'utilise avec doué ET non-doué de raison ✅',
+      },
+      {
+        enonce:      'Pour dire **"avec qui"**, on utilise ?',
+        options:     [['مَعَ أَيٍّ'], ['مَعَ مَنْ'], ['مَعَ مَا']],
+        reponse:     1,
+        explication: '**مَعَ مَنْ** = avec qui ✅  مَنْ = pour les personnes — مَا = pour les choses',
+      },
+    ],
+  },
+
+  // ─────────────────────────────────────────────────────────────────
+  //  LEÇON 10 — مراجعة كاملة  (Révision générale)
+  // ─────────────────────────────────────────────────────────────────
+  lecon10: {
+    titre: 'Leçon 10 — مراجعة كاملة',
+    questions: [
+      {
+        enonce:      'Quel pronom démonstratif pour **نَافِذَةٌ** (fenêtre — loin) ?',
+        options:     [['هَذِهِ'], ['تِلْكَ'], ['ذَلِكَ']],
+        reponse:     1,
+        explication: '**تِلْكَ** = مفرد مؤنث للبعيد ✅  (Leçon 1)',
+      },
+      {
+        enonce:      'Quel mot interrogatif pour demander le **prix** ?',
+        options:     [['كَمْ'], ['بِكَمْ'], ['مَتَى']],
+        reponse:     1,
+        explication: '**بِكَمْ** = combien (prix) ✅  (Leçon 2)',
+      },
+      {
+        enonce:      'Le mot **مَسَاجِدُ** (mosquées) prend-il le tanwīn ?',
+        options:     [['✅ نَعَمْ'], ['❌ لَا — c\'est un diptote'], ['Seulement avec أل']],
+        reponse:     1,
+        explication: '**مَسَاجِدُ** = صيغة منتهى الجموع → ممنوع من الصرف → pas de tanwīn ✅  (Leçon 3)',
+      },
+      {
+        enonce:      'Dans **الطَّالِبُ فِي الْفَصْلِ**, le خبر est de quel type ?',
+        options:     [['خبر مفرد'], ['خبر شبه جملة — جار ومجرور'], ['خبر جملة فعلية']],
+        reponse:     1,
+        explication: '**فِي الْفَصْلِ** = جار ومجرور → خبر شبه جملة ✅  (Leçon 4)',
+      },
+      {
+        enonce:      'Quel اسم موصول pour **الكُتُبُ** (pluriel non-humain) ?',
+        options:     [['الَّذِينَ'], ['الَّتِي'], ['اللَّتَانِ']],
+        reponse:     1,
+        explication: '**الَّتِي** = aussi pour le pluriel non-humain, même forme que le singulier féminin ✅  (Leçon 5)',
+      },
+      {
+        enonce:      'Dans **كِتَابُهَا** (son livre — à elle), quel est le pronom attaché ?',
+        options:     [['هُ'], ['هَا'], ['هُمَا']],
+        reponse:     1,
+        explication: '**هَا** = pronom de 3ème personne féminin singulier attaché ✅  (Leçon 6)',
+      },
+      {
+        enonce:      'La lettre **نـ** est-elle قمرية ou شمسية ?',
+        options:     [['قمرية'], ['شمسية'], ['Cela dépend']],
+        reponse:     1,
+        explication: '**ن** est شمسية ✅  → اَلنَّجْمُ (le ل s\'assimile)  (Leçon 7)',
+      },
+      {
+        enonce:      'Comment dit-on **"cinq livres"** ?',
+        options:     [['خَمْسَةُ كُتُبٍ'], ['خَمْسُ كُتُبٍ'], ['خَمْسُونَ كِتَابٍ']],
+        reponse:     0,
+        explication: '**خَمْسَةُ كُتُبٍ** : كتب est masculin → on utilise خَمْسَة (féminin) par inversion ✅  (Leçon 8)',
+      },
+      {
+        enonce:      'Comment dit-on **"j\'ai un frère"** (appartenance) ?',
+        options:     [['عِنْدِي أَخٌ'], ['لِي أَخٌ'], ['أَنَا أَخٌ']],
+        reponse:     1,
+        explication: '**لِي أَخٌ** = j\'ai un frère (appartenance) ✅  عندي = possession physique/proche  (Leçon 9)',
+      },
+      {
+        enonce:      'Forme le duel de **طَالِبَةٌ** :',
+        options:     [['طَالِبَتَانِ'], ['طَالِبَتَيْنِ  (cas direct)'], ['Les deux selon le cas']],
+        reponse:     2,
+        explication: '**طَالِبَتَانِ** (nominatif) / **طَالِبَتَيْنِ** (accusatif/génitif) — les deux sont corrects selon le contexte ✅  (Leçon 9)',
+      },
+    ],
+  },
+
 };
+
+// ── Liste pour les menus Discord (à copier aussi dans LECON_CHOICES) ──────────
+const LECON_CHOICES = [
+  { name: 'Leçon 1 — أسماء الإشارة',           value: 'lecon1'  },
+  { name: 'Leçon 2 — أدوات الاستفهام',          value: 'lecon2'  },
+  { name: 'Leçon 3 — الممنوع من الصرف',         value: 'lecon3'  },
+  { name: 'Leçon 4 — الجملة الاسمية',           value: 'lecon4'  },
+  { name: 'Leçon 5 — الأسماء الموصولة',         value: 'lecon5'  },
+  { name: 'Leçon 6 — الضمائر',                  value: 'lecon6'  },
+  { name: 'Leçon 7 — الحروف القمرية والشمسية',  value: 'lecon7'  },
+  { name: 'Leçon 8 — النعت والمنعوت / العدد',   value: 'lecon8'  },
+  { name: 'Leçon 9 — بعض القواعد',              value: 'lecon9'  },
+  { name: 'Leçon 10 — مراجعة كاملة',            value: 'lecon10' },
+];
 
 // ─── Sessions QCM actives (mémoire) ──────────────────────────────────────────
 const qcmSessions = new Map();
@@ -329,10 +957,6 @@ async function updateKhatmaMessage(khatma, guild) {
 // ══════════════════════════════════════════════════════════════════════════════
 
 // ⬇️ Ajouter chaque nouvelle leçon ici aussi
-const LECON_CHOICES = [
-  { name: 'Leçon 1 — أسماء الإشارة', value: 'lecon1' },
-  // { name: 'Leçon 2 — ...', value: 'lecon2' },
-];
 
 const commands = [
   new SlashCommandBuilder()
