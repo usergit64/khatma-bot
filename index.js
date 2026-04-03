@@ -846,6 +846,21 @@ function buildAnswerButtons(leconId, qIndex) {
   return row;
 }
 
+// ─── Quitter un QCM en cours ─────────────────────────────────────────────────
+
+function clearQuizState(userId) {
+  qcmSessions.delete(userId);
+}
+
+function buildQuitFromErrorButton() {
+  return new ActionRowBuilder().addComponents(
+    new ButtonBuilder()
+      .setCustomId('quit_quiz_from_error')
+      .setLabel('🔄 Quitter le quiz en cours')
+      .setStyle(ButtonStyle.Danger)
+  );
+}
+
 // ─── Vérification rôle professeure ───────────────────────────────────────────
 
 function isProfesseure(interaction) {
@@ -1119,11 +1134,34 @@ client.on('interactionCreate', async interaction => {
       return;
     }
 
+    // ══ QCM — quitter depuis le message d'erreur ══
+    if (id === 'quit_quiz_from_error') {
+      const sess = qcmSessions.get(userId);
+      if (!sess) {
+        await interaction.reply({ content: '✅ Tu n\'as aucun QCM en cours.', flags: MessageFlags.Ephemeral });
+        return;
+      }
+      const titreQuiz = LECONS[sess.leconId]?.titre ?? sess.leconId;
+      clearQuizState(userId);
+      await interaction.reply({
+        embeds: [new EmbedBuilder()
+          .setTitle('🔄 Quiz quitté')
+          .setDescription(`Tu as quitté le quiz **${titreQuiz}**.\n\nTu peux maintenant relancer un nouveau QCM avec \`/qcm\` 🎯`)
+          .setColor(0xE74C3C)],
+        flags: MessageFlags.Ephemeral,
+      });
+      return;
+    }
+
     // ══ QCM — démarrer ══
     if (id.startsWith('qcm_start_')) {
       const leconId = id.replace('qcm_start_', '');
       if (qcmSessions.has(userId)) {
-        await interaction.reply({ content: '⚠️ Tu as déjà un QCM en cours !', flags: MessageFlags.Ephemeral });
+        await interaction.reply({
+          content: '⚠️ Tu as déjà un QCM en cours ! Quitte-le avant d\'en commencer un nouveau.',
+          components: [buildQuitFromErrorButton()],
+          flags: MessageFlags.Ephemeral,
+        });
         return;
       }
       qcmSessions.set(userId, { leconId, qIndex: 0, score: 0, erreurs: [] });
