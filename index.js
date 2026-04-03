@@ -801,7 +801,13 @@ const LECON_CHOICES = [
 ];
 
 // ─── Sessions QCM actives (mémoire) ──────────────────────────────────────────
+// Structure : userId → { leconId, qIndex, score, erreurs }
 const qcmSessions = new Map();
+
+// ─── Nettoyage état QCM ───────────────────────────────────────────────────────
+function clearQuizState(userId) {
+  qcmSessions.delete(userId);
+}
 
 // ─── Helpers visuels ─────────────────────────────────────────────────────────
 
@@ -844,6 +850,15 @@ function buildAnswerButtons(leconId, qIndex) {
     );
   });
   return row;
+}
+
+function buildQuitButton() {
+  return new ActionRowBuilder().addComponents(
+    new ButtonBuilder()
+      .setCustomId('quit_quiz')
+      .setLabel('❌  Quitter le quiz')
+      .setStyle(ButtonStyle.Danger)
+  );
 }
 
 // ─── Vérification rôle professeure ───────────────────────────────────────────
@@ -1000,6 +1015,9 @@ async function registerCommands() {
 // ══════════════════════════════════════════════════════════════════════════════
 
 client.on('interactionCreate', async interaction => {
+  // Ignorer les interactions expirées / fantômes
+  if (!interaction.isRepliable()) return;
+
   const userId   = interaction.user.id;
   const username = interaction.member?.displayName ?? interaction.user.username;
 
@@ -1130,7 +1148,7 @@ client.on('interactionCreate', async interaction => {
       const embed = buildQuestionEmbed(leconId, 0, null);
       embed.setAuthor({ name: `QCM — ${LECONS[leconId].titre}` });
       embed.setFooter({ text: 'Seule toi vois ces messages 🤲' });
-      await interaction.reply({ embeds: [embed], components: [buildAnswerButtons(leconId, 0)], flags: MessageFlags.Ephemeral });
+      await interaction.reply({ embeds: [embed], components: [buildAnswerButtons(leconId, 0), buildQuitButton()], flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -1162,7 +1180,7 @@ client.on('interactionCreate', async interaction => {
       // ── Dernière question → résultat final ──
       if (sess.qIndex >= total) {
         const { score, erreurs, leconId } = sess;
-        qcmSessions.delete(userId);
+        clearQuizState(userId);
         await appendResult(userId, username, leconId, score, total, erreurs);
         const pct = Math.round(score / total * 100);
         const msg = pct === 100 ? 'مَاشَاءَ اللَّهُ — Parfait, aucune erreur ! 🎉'
@@ -1186,7 +1204,39 @@ client.on('interactionCreate', async interaction => {
       // ── Question suivante — feedback AVANT la question ──
       await interaction.update({
         embeds:     [buildQuestionEmbed(sess.leconId, sess.qIndex, feedback)],
-        components: [buildAnswerButtons(sess.leconId, sess.qIndex)],
+        components: [buildAnswerButtons(sess.leconId, sess.qIndex), buildQuitButton()],
+      });
+      return;
+    }
+
+    // ══ QCM — quitter ══
+    if (id === 'quit_quiz') {
+      const sess = qcmSessions.get(userId);
+      if (!sess) {
+        // Session déjà terminée ou inexistante
+        await interaction.update({
+          embeds: [new EmbedBuilder()
+            .setTitle('❌  Quiz abandonné')
+            .setDescription('Aucun quiz actif trouvé. Utilise **/qcm** pour en démarrer un nouveau.')
+            .setColor(0xB03A2E)],
+          components: [],
+        });
+        return;
+      }
+      const leconTitre = LECONS[sess.leconId]?.titre ?? sess.leconId;
+      const questionsAnswered = sess.qIndex;
+      const total = LECONS[sess.leconId]?.questions.length ?? '?';
+      clearQuizState(userId);
+      await interaction.update({
+        embeds: [new EmbedBuilder()
+          .setTitle('❌  Quiz abandonné')
+          .setDescription(
+            `Tu as quitté le quiz **${leconTitre}**.\n\n` +
+            `Questions répondues : **${questionsAnswered} / ${total}**\n\n` +
+            `Lance **/qcm** pour recommencer quand tu veux 🤲`
+          )
+          .setColor(0xB03A2E)],
+        components: [],
       });
       return;
     }
