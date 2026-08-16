@@ -9,6 +9,10 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, MessageFlags } = require('discord.js');
 const { createAppel, recordPresence, getTodayAppel, getAppelByDate, getAllKeys } = require('../utils/appel-storage');
 
+// ── Liste de test ─────────────────────────────────────────────────────────────
+
+const ELEVES_TEST = ['oum khalil'];
+
 // ── Liste des élèves (display names / usernames Discord) ──────────────────────
 
 const ELEVES = [
@@ -35,12 +39,12 @@ const CHANNEL_NAME = 'cours-tome-1'; // slug Discord (tirets, minuscules)
 
 // ── Résolution des membres par display name ───────────────────────────────────
 
-async function resolveMembers(guild) {
+async function resolveMembers(guild, list = ELEVES) {
   await guild.members.fetch(); // nécessite GuildMembers intent
   const found   = [];
   const missing = [];
 
-  for (const name of ELEVES) {
+  for (const name of list) {
     const lc = name.toLowerCase();
     const member = guild.members.cache.find(m =>
       m.displayName.toLowerCase() === lc ||
@@ -84,7 +88,27 @@ function buildPresenceRow() {
   );
 }
 
-// ── Envoi de l'appel ─────────────────────────────────────────────────────────
+// ── Envoi de l'appel (générique) ──────────────────────────────────────────────
+
+async function sendAppelToChannel(guild, channel, elevesList) {
+  const { found, missing } = await resolveMembers(guild, elevesList);
+
+  const mentions   = found.map(({ member }) => `<@${member.id}>`).join(' ');
+  const missingTxt = missing.length ? `\n⚠️ Non trouvées : ${missing.join(', ')}` : '';
+
+  const embed = buildAppelEmbed({}, elevesList.length);
+  const row   = buildPresenceRow();
+
+  const msg = await channel.send({
+    content: `${mentions}${missingTxt}`,
+    embeds:  [embed],
+    components: [row],
+  });
+
+  createAppel(msg.id, channel.id);
+  console.log(`✅ Appel envoyé dans #${channel.name} (${new Date().toLocaleString('fr-FR')})`);
+  return msg;
+}
 
 async function sendAppel(client) {
   const guild = client.guilds.cache.first();
@@ -95,22 +119,7 @@ async function sendAppel(client) {
   );
   if (!channel) { console.error(`❌ Appel : salon "${CHANNEL_NAME}" introuvable`); return; }
 
-  const { found, missing } = await resolveMembers(guild);
-
-  const mentions   = found.map(({ member }) => `<@${member.id}>`).join(' ');
-  const missingTxt = missing.length ? `\n⚠️ Non trouvées : ${missing.join(', ')}` : '';
-
-  const embed = buildAppelEmbed({}, ELEVES.length);
-  const row   = buildPresenceRow();
-
-  const msg = await channel.send({
-    content: `${mentions}${missingTxt}`,
-    embeds:  [embed],
-    components: [row],
-  });
-
-  createAppel(msg.id, channel.id);
-  console.log(`✅ Appel envoyé (${new Date().toLocaleString('fr-FR')})`);
+  await sendAppelToChannel(guild, channel, ELEVES);
 }
 
 // ── Gestion du bouton ─────────────────────────────────────────────────────────
@@ -146,6 +155,19 @@ async function handleAppelCommand(interaction) {
     await interaction.deferReply({ flags: MessageFlags.Ephemeral });
     await sendAppel(interaction.client);
     await interaction.editReply('✅ Appel envoyé manuellement.');
+    return;
+  }
+
+  // /appel test → envoi dans le salon courant avec liste de test
+  if (sub === 'test') {
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+    const guild    = interaction.guild;
+    const channel  = interaction.channel;
+    // liste test = ELEVES_TEST + la personne qui lance la commande
+    const invokerName = interaction.member?.displayName ?? interaction.user.username;
+    const testList = [...new Set([invokerName, ...ELEVES_TEST])];
+    await sendAppelToChannel(guild, channel, testList);
+    await interaction.editReply(`✅ Test envoyé dans <#${channel.id}> avec : ${testList.join(', ')}`);
     return;
   }
 

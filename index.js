@@ -135,7 +135,7 @@ client.on('interactionCreate', async interaction => {
 
     if (cmd === 'appel') {
       const sub = interaction.options.getSubcommand(false);
-      if (sub === 'now' && !isProfesseure(interaction)) { await rejectNotProfesseure(interaction); return; }
+      if ((sub === 'now' || sub === 'test') && !isProfesseure(interaction)) { await rejectNotProfesseure(interaction); return; }
       await handleAppelCommand(interaction);
       return;
     }

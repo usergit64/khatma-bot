@@ -84,6 +84,10 @@ const commands = [
       s.setName('now')
         .setDescription('Envoyer l\'appel maintenant — rôle professeure-tome1 requis')
     )
+    .addSubcommand(s =>
+      s.setName('test')
+        .setDescription('Test dans ce salon avec toi + oum khalil — rôle professeure-tome1 requis')
+    )
     .toJSON(),
 ];
 
