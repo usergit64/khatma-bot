@@ -91,11 +91,13 @@ const commands = [
     .toJSON(),
 ];
 
+const GUILD_ID = '827186013209100299';
+
 async function registerCommands(token, clientId) {
   const rest = new REST({ version: '10' }).setToken(token);
   try {
-    await rest.put(Routes.applicationCommands(clientId), { body: commands });
-    console.log('✅ Commandes slash enregistrées.');
+    await rest.put(Routes.applicationGuildCommands(clientId, GUILD_ID), { body: commands });
+    console.log('✅ Commandes slash enregistrées (guilde).');
   } catch (err) {
     console.error('❌ Erreur enregistrement commandes:', err);
   }
