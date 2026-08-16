@@ -19,6 +19,7 @@ require('dotenv').config();
 
 const { Client, GatewayIntentBits, MessageFlags } = require('discord.js');
 const { EmbedBuilder } = require('discord.js');
+const { sendAppel, handleAppelButton, handleAppelCommand, startScheduler } = require('./handlers/appel');
 
 const { registerCommands }                          = require('./commands');
 const { handleQcmCommand, handleQcmStart, handleQcmAnswer } = require('./handlers/qcm');
@@ -36,6 +37,7 @@ const client = new Client({
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.MessageContent,
+    GatewayIntentBits.GuildMembers, // requis pour résoudre les membres par nom
   ],
 });
 
@@ -130,6 +132,13 @@ client.on('interactionCreate', async interaction => {
       await interaction.reply({ content: '🗑️ Tous les résultats ont été effacés.', flags: MessageFlags.Ephemeral });
       return;
     }
+
+    if (cmd === 'appel') {
+      const sub = interaction.options.getSubcommand(false);
+      if (sub === 'now' && !isProfesseure(interaction)) { await rejectNotProfesseure(interaction); return; }
+      await handleAppelCommand(interaction);
+      return;
+    }
   }
 
   // ── Boutons ──────────────────────────────────────────────────────────────────
@@ -152,6 +161,11 @@ client.on('interactionCreate', async interaction => {
       await handleQcmAnswer(interaction, choiceIndex);
       return;
     }
+
+    if (id === 'appel_presente') {
+      await handleAppelButton(interaction);
+      return;
+    }
   }
 
   // ── Menus déroulants ─────────────────────────────────────────────────────────
@@ -167,6 +181,8 @@ client.on('interactionCreate', async interaction => {
 client.once('ready', async () => {
   console.log(`✅ Bot connecté : ${client.user.tag}`);
   await registerCommands(TOKEN, CLIENT_ID);
+  startScheduler(client);
+  console.log('⏰ Planificateur appel 16h00 (Paris) démarré.');
 });
 
 client.login(TOKEN);

@@ -67,6 +67,24 @@ const commands = [
     .setName('reinitialiser_qcm')
     .setDescription('🗑️ Effacer tous les résultats — rôle professeure-tome1 requis')
     .toJSON(),
+
+  new SlashCommandBuilder()
+    .setName('appel')
+    .setDescription('📋 Appel quotidien Cours Tome 1')
+    .addSubcommand(s =>
+      s.setName('resultats')
+        .setDescription('Voir les présences du jour (ou d\'une date)')
+        .addStringOption(o =>
+          o.setName('date')
+            .setDescription('Date au format YYYY-MM-DD (ex: 2026-08-16)')
+            .setRequired(false)
+        )
+    )
+    .addSubcommand(s =>
+      s.setName('now')
+        .setDescription('Envoyer l\'appel maintenant — rôle professeure-tome1 requis')
+    )
+    .toJSON(),
 ];
 
 async function registerCommands(token, clientId) {
