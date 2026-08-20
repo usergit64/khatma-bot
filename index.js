@@ -17,6 +17,7 @@
 
 require('dotenv').config();
 
+const http = require('http');
 const { Client, GatewayIntentBits, MessageFlags } = require('discord.js');
 const { EmbedBuilder } = require('discord.js');
 const { sendAppel, handleAppelButton, handleAppelCommand, startScheduler } = require('./handlers/appel');
@@ -187,5 +188,9 @@ client.once('ready', async () => {
 
 process.on('unhandledRejection', err => console.error('❌ Unhandled rejection:', err));
 process.on('uncaughtException',  err => console.error('❌ Uncaught exception:', err));
+
+const PORT = process.env.PORT || 3000;
+http.createServer((req, res) => { res.writeHead(200); res.end('OK'); })
+  .listen(PORT, () => console.log(`🌐 Serveur HTTP sur le port ${PORT}`));
 
 client.login(TOKEN);
