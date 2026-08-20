@@ -40,7 +40,7 @@ const CHANNEL_NAME = 'cours-tome-1'; // slug Discord (tirets, minuscules)
 // ── Résolution des membres par display name ───────────────────────────────────
 
 async function resolveMembers(guild, list = ELEVES) {
-  await guild.members.fetch(); // nécessite GuildMembers intent
+  try { await guild.members.fetch(); } catch (_) { /* GuildMembers intent non activé */ }
   const found   = [];
   const missing = [];
 
