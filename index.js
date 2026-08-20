@@ -189,8 +189,15 @@ client.once('ready', async () => {
 process.on('unhandledRejection', err => console.error('❌ Unhandled rejection:', err));
 process.on('uncaughtException',  err => console.error('❌ Uncaught exception:', err));
 
+const https = require('https');
 const PORT = process.env.PORT || 3000;
+const SELF_URL = 'https://khatma-bot-u7dp.onrender.com/';
 http.createServer((req, res) => { res.writeHead(200); res.end('OK'); })
-  .listen(PORT, () => console.log(`🌐 Serveur HTTP sur le port ${PORT}`));
+  .listen(PORT, () => {
+    console.log(`🌐 Serveur HTTP sur le port ${PORT}`);
+    setInterval(() => {
+      https.get(SELF_URL, () => {}).on('error', () => {});
+    }, 14 * 60 * 1000);
+  });
 
 client.login(TOKEN);
