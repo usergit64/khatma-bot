@@ -54,7 +54,8 @@ function getKhatma(guildId) {
 const NIVEAU_LABEL = { fluide: 'Fluide', intermediaire: 'Intermédiaire', debutante: 'Débutante' };
 
 function formatPages(p) {
-  return (p === '1 ligne' || p === '1 verset') ? p : `${p} page(s)`;
+  const passthrough = ['1 ligne', '3 lignes', '1 verset', '3 versets'];
+  return passthrough.includes(p) ? p : `${p} page(s)`;
 }
 
 // ── Constructeurs d'embeds et de composants ──────────────────────────────────
@@ -127,7 +128,12 @@ function niveauMenu() {
 }
 
 function pagesMenu(niveau) {
-  const basique     = [{ label: '1 ligne', value: '1 ligne' }, { label: '1 verset', value: '1 verset' }];
+  const basique     = [
+    { label: '1 ligne',    value: '1 ligne' },
+    { label: '3 lignes',   value: '3 lignes' },
+    { label: '1 verset',   value: '1 verset' },
+    { label: '3 versets',  value: '3 versets' },
+  ];
   const intermediaire = [...basique, { label: '1 page', value: '1', description: 'Une page du Mushaf' }];
   const fluide       = [...intermediaire, { label: '2 pages', value: '2' }, { label: '3 pages', value: '3' }];
   const options = niveau === 'debutante' ? basique : niveau === 'intermediaire' ? intermediaire : fluide;
