@@ -192,8 +192,11 @@ process.on('uncaughtException',  err => console.error('❌ Uncaught exception:',
 const https = require('https');
 const PORT = process.env.PORT || 3000;
 const SELF_URL = 'https://khatma-bot-u7dp.onrender.com/';
-http.createServer((req, res) => { res.writeHead(200); res.end('OK'); })
-  .listen(PORT, () => {
+http.createServer((req, res) => {
+  const status = client.isReady() ? 'connected' : 'disconnected';
+  res.writeHead(200);
+  res.end(`OK | discord=${status} | tag=${client.user?.tag ?? 'none'}`);
+}).listen(PORT, () => {
     console.log(`🌐 Serveur HTTP sur le port ${PORT}`);
     setInterval(() => {
       https.get(SELF_URL, () => {}).on('error', () => {});
