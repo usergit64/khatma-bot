@@ -195,7 +195,7 @@ const SELF_URL = 'https://khatma-bot-u7dp.onrender.com/';
 http.createServer((req, res) => {
   const status = client.isReady() ? 'connected' : 'disconnected';
   res.writeHead(200);
-  res.end(`OK | discord=${status} | tag=${client.user?.tag ?? 'none'}`);
+  res.end(`OK discord=${status}`);
 }).listen(PORT, () => {
     console.log(`🌐 Serveur HTTP sur le port ${PORT}`);
     setInterval(() => {
@@ -203,4 +203,11 @@ http.createServer((req, res) => {
     }, 14 * 60 * 1000);
   });
 
-client.login(TOKEN);
+if (!TOKEN) {
+  console.error('❌ DISCORD_TOKEN manquant dans les variables d\'environnement Render !');
+  process.exit(1);
+}
+client.login(TOKEN).catch(err => {
+  console.error('❌ Échec connexion Discord:', err.message);
+  process.exit(1);
+});
