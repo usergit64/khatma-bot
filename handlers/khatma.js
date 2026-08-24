@@ -1,27 +1,3 @@
-/**
- * handlers/khatma.js — Gestion de la Khatma
- *
- * La khatma permet aux participantes de s'inscrire pour réciter le Coran
- * ensemble, en précisant leur niveau et le nombre de pages par passage.
- *
- * Commandes :
- *   /khatma start — Démarre une nouvelle khatma dans le channel (affiche la liste + boutons)
- *   /khatma liste — Affiche la liste avec les boutons de gestion
- *   /khatma reset — Réinitialise complètement la khatma du serveur
- *
- * Boutons visibles dans le message principal :
- *   🌺 J'écoute   — Rejoindre comme auditrice (sans réciter)
- *   🌸 Je participe — Ouvre le menu niveau → pages
- *
- * Boutons dans le message de liste :
- *   🌸 Rejoindre la liste
- *   ⏸️ Me mettre indisponible
- *   ✅ Redevenir active
- *
- * Les données sont en mémoire (perdues si le bot redémarre).
- * Pour une persistance, adapter les fonctions getKhatma/setKhatma.
- */
-
 const {
   ActionRowBuilder,
   ButtonBuilder,
@@ -30,26 +6,9 @@ const {
   EmbedBuilder,
   MessageFlags,
 } = require('discord.js');
+const { load, save, reset } = require('../utils/khatma-storage');
 
-// Données en mémoire : Map<guildId, khatmaData>
-const khatmas      = new Map();
-const tempUserData = new Map(); // stockage temporaire niveau/pages lors de l'inscription
-
-function getKhatma(guildId) {
-  if (!khatmas.has(guildId)) {
-    khatmas.set(guildId, {
-      participants:    [],
-      listeners:       [],
-      messageId:       null,
-      channelId:       null,
-      listeMessageId:  null,
-      listeChannelId:  null,
-    });
-  }
-  return khatmas.get(guildId);
-}
-
-// ── Labels et formatage ──────────────────────────────────────────────────────
+const tempUserData = new Map();
 
 const NIVEAU_LABEL = { fluide: 'Fluide', intermediaire: 'Intermédiaire', debutante: 'Débutante' };
 
@@ -57,8 +16,6 @@ function formatPages(p) {
   const passthrough = ['1 ligne', '3 lignes', '1 verset', '3 versets'];
   return passthrough.includes(p) ? p : `${p} page(s)`;
 }
-
-// ── Constructeurs d'embeds et de composants ──────────────────────────────────
 
 function buildListEmbed(khatma) {
   const LTR   = '\u200E';
@@ -128,14 +85,14 @@ function niveauMenu() {
 }
 
 function pagesMenu(niveau) {
-  const basique     = [
-    { label: '1 ligne',    value: '1 ligne' },
-    { label: '3 lignes',   value: '3 lignes' },
-    { label: '1 verset',   value: '1 verset' },
-    { label: '3 versets',  value: '3 versets' },
+  const basique = [
+    { label: '1 ligne',   value: '1 ligne' },
+    { label: '3 lignes',  value: '3 lignes' },
+    { label: '1 verset',  value: '1 verset' },
+    { label: '3 versets', value: '3 versets' },
   ];
   const intermediaire = [...basique, { label: '1 page', value: '1', description: 'Une page du Mushaf' }];
-  const fluide       = [...intermediaire, { label: '2 pages', value: '2' }, { label: '3 pages', value: '3' }];
+  const fluide        = [...intermediaire, { label: '2 pages', value: '2' }, { label: '3 pages', value: '3' }];
   const options = niveau === 'debutante' ? basique : niveau === 'intermediaire' ? intermediaire : fluide;
   return new ActionRowBuilder().addComponents(
     new StringSelectMenuBuilder()
@@ -162,18 +119,15 @@ async function updateKhatmaMessage(khatma, guild) {
   }
 }
 
-// ── Handlers de commandes ─────────────────────────────────────────────────────
-
 async function handleKhatmaCommand(interaction) {
-  const khatma = getKhatma(interaction.guildId);
+  const khatma = load(interaction.guildId);
   const sub    = interaction.options.getSubcommand();
 
   if (sub === 'start') {
-    khatma.participants = [];
-    khatma.listeners    = [];
-    khatma.channelId    = interaction.channelId;
-    await interaction.reply({ embeds: [buildListEmbed(khatma)], components: [mainButtons()] });
-    khatma.messageId = (await interaction.fetchReply()).id;
+    const fresh = { participants: [], listeners: [], channelId: interaction.channelId, messageId: null, listeMessageId: null, listeChannelId: null };
+    await interaction.reply({ embeds: [buildListEmbed(fresh)], components: [mainButtons()] });
+    fresh.messageId = (await interaction.fetchReply()).id;
+    save(interaction.guildId, fresh);
     return;
   }
 
@@ -182,28 +136,28 @@ async function handleKhatmaCommand(interaction) {
     const m = await interaction.fetchReply();
     khatma.listeMessageId  = m.id;
     khatma.listeChannelId  = interaction.channelId;
+    save(interaction.guildId, khatma);
     return;
   }
 
   if (sub === 'reset') {
-    khatmas.delete(interaction.guildId);
+    reset(interaction.guildId);
     await interaction.reply({ content: '🔄 Khatma réinitialisée.', flags: MessageFlags.Ephemeral });
   }
 }
-
-// ── Handlers de boutons ───────────────────────────────────────────────────────
 
 async function handleKhatmaButton(interaction) {
   const id       = interaction.customId;
   const userId   = interaction.user.id;
   const username = interaction.member?.displayName ?? interaction.user.username;
-  const khatma   = getKhatma(interaction.guildId);
+  const khatma   = load(interaction.guildId);
 
   if (id === 'khatma_ecoute') {
     khatma.participants = khatma.participants.filter(p => p.userId !== userId);
     if (!khatma.listeners.find(l => l.userId === userId)) {
-      khatma.listeners.push({ userId, username, joinedAt: new Date() });
+      khatma.listeners.push({ userId, username, joinedAt: new Date().toISOString() });
     }
+    save(interaction.guildId, khatma);
     await updateKhatmaMessage(khatma, interaction.guild);
     await interaction.reply({ content: '🌺 Tu as été ajoutée à la liste des auditrices !', flags: MessageFlags.Ephemeral });
     return;
@@ -218,6 +172,7 @@ async function handleKhatmaButton(interaction) {
     const p = khatma.participants.find(p => p.userId === userId);
     if (p) {
       p.status = 'indisponible';
+      save(interaction.guildId, khatma);
       await updateKhatmaMessage(khatma, interaction.guild);
       await interaction.reply({ content: '⏸️ Marquée indisponible.', flags: MessageFlags.Ephemeral });
     } else {
@@ -231,6 +186,7 @@ async function handleKhatmaButton(interaction) {
     if (p) {
       p.status   = 'actif';
       p.username = username;
+      save(interaction.guildId, khatma);
       await updateKhatmaMessage(khatma, interaction.guild);
       await interaction.reply({ content: '✅ Tu es de nouveau active !', flags: MessageFlags.Ephemeral });
     } else {
@@ -239,12 +195,10 @@ async function handleKhatmaButton(interaction) {
   }
 }
 
-// ── Handlers de menus ─────────────────────────────────────────────────────────
-
 async function handleKhatmaSelectMenu(interaction) {
   const userId   = interaction.user.id;
   const username = interaction.member?.displayName ?? interaction.user.username;
-  const khatma   = getKhatma(interaction.guildId);
+  const khatma   = load(interaction.guildId);
 
   if (interaction.customId === 'khatma_niveau') {
     const niveau = interaction.values[0];
@@ -266,8 +220,9 @@ async function handleKhatmaSelectMenu(interaction) {
     if (existing) {
       Object.assign(existing, { niveau, pages, status: 'actif', username });
     } else {
-      khatma.participants.push({ userId, username, niveau, pages, status: 'actif', joinedAt: new Date() });
+      khatma.participants.push({ userId, username, niveau, pages, status: 'actif', joinedAt: new Date().toISOString() });
     }
+    save(interaction.guildId, khatma);
     await updateKhatmaMessage(khatma, interaction.guild);
     await interaction.update({
       content:    `✅ C'est noté ! Tu vas lire **${formatPages(pages)}** à chaque passage.\nBienvenue dans la khatma 🤍✨`,
