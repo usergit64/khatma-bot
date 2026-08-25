@@ -13,7 +13,6 @@ if (!TOKEN) {
 const http  = require('http');
 const https = require('https');
 const { Client, GatewayIntentBits, MessageFlags, EmbedBuilder } = require('discord.js');
-const { sendAppel, handleAppelButton, handleAppelCommand, startScheduler } = require('./handlers/appel');
 const { registerCommands }                                                  = require('./commands');
 const { handleQcmCommand, handleQcmStart, handleQcmAnswer }                 = require('./handlers/qcm');
 const { handleKhatmaCommand, handleKhatmaButton, handleKhatmaSelectMenu }   = require('./handlers/khatma');
@@ -123,12 +122,6 @@ client.on('interactionCreate', async interaction => {
         return;
       }
 
-      if (cmd === 'appel') {
-        const sub = interaction.options.getSubcommand(false);
-        if ((sub === 'now' || sub === 'test') && !isProfesseure(interaction)) { await rejectNotProfesseure(interaction); return; }
-        await handleAppelCommand(interaction);
-        return;
-      }
     }
 
     // ── Boutons ────────────────────────────────────────────────────────────────
@@ -150,10 +143,6 @@ client.on('interactionCreate', async interaction => {
         return;
       }
 
-      if (id === 'appel_presente') {
-        await handleAppelButton(interaction);
-        return;
-      }
     }
 
     // ── Menus déroulants ───────────────────────────────────────────────────────
@@ -179,8 +168,6 @@ client.on('interactionCreate', async interaction => {
 client.once('ready', async () => {
   console.log(`✅ Bot connecté : ${client.user.tag}`);
   await registerCommands(TOKEN, CLIENT_ID);
-  startScheduler(client);
-  console.log('⏰ Planificateur appel 16h00 (Paris) démarré.');
 });
 
 client.on('disconnect', () => console.warn('⚠️ Bot déconnecté de Discord.'));
