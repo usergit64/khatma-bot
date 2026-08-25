@@ -1,5 +1,7 @@
 require('dotenv').config();
 
+// deploy: 2026-08-25
+
 const TOKEN     = process.env.DISCORD_TOKEN;
 const CLIENT_ID = process.env.CLIENT_ID;
 
