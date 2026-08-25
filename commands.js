@@ -69,6 +69,11 @@ const commands = [
     .toJSON(),
 
   new SlashCommandBuilder()
+    .setName('ping')
+    .setDescription('🏓 Test — vérifie que le bot répond')
+    .toJSON(),
+
+  new SlashCommandBuilder()
     .setName('appel')
     .setDescription('📋 Appel quotidien Cours Tome 1')
     .addSubcommand(s =>

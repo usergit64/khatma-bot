@@ -59,6 +59,11 @@ client.on('interactionCreate', async interaction => {
     if (interaction.isChatInputCommand()) {
       const cmd = interaction.commandName;
 
+      if (cmd === 'ping') {
+        await interaction.reply({ content: `🏓 Pong ! Bot opérationnel — ${new Date().toLocaleTimeString('fr-FR')}`, flags: MessageFlags.Ephemeral });
+        return;
+      }
+
       if (cmd === 'khatma') {
         await handleKhatmaCommand(interaction);
         return;
