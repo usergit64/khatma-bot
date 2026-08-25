@@ -196,8 +196,10 @@ const SELF_URL = 'https://khatma-bot-u7dp.onrender.com/';
 
 http.createServer((req, res) => {
   const status = client.isReady() ? 'connected' : 'disconnected';
+  const uptime = Math.floor(process.uptime());
+  const ws     = client.ws?.status ?? 'unknown';
   res.writeHead(200);
-  res.end(`OK discord=${status}`);
+  res.end(`v5 discord=${status} ws=${ws} uptime=${uptime}s guilds=${client.guilds.cache.size}`);
 }).listen(PORT, () => {
   console.log(`🌐 Serveur HTTP sur le port ${PORT}`);
   // Ping toutes les 10 min — bien en dessous de la limite de 15 min de Render
