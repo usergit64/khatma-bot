@@ -3,7 +3,7 @@ require('dotenv').config();
 // deploy: 2026-08-25
 
 const TOKEN     = process.env.DISCORD_TOKEN;
-const CLIENT_ID = process.env.CLIENT_ID;
+const CLIENT_ID = process.env.CLIENT_ID || '1483865462092726314';
 
 if (!TOKEN) {
   console.error('❌ DISCORD_TOKEN manquant !');
