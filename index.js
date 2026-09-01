@@ -1,6 +1,6 @@
 require('dotenv').config();
 
-// deploy: 2026-08-25
+// deploy: 2026-09-01
 
 const TOKEN     = process.env.DISCORD_TOKEN;
 const CLIENT_ID = process.env.CLIENT_ID || '1483865462092726314';
@@ -12,11 +12,9 @@ if (!TOKEN) {
 
 const http  = require('http');
 const https = require('https');
-const { Client, GatewayIntentBits, MessageFlags, EmbedBuilder } = require('discord.js');
-const { registerCommands }                                                  = require('./commands');
-const { handleQcmCommand, handleQcmStart, handleQcmAnswer }                 = require('./handlers/qcm');
-const { handleKhatmaCommand, handleKhatmaButton, handleKhatmaSelectMenu }   = require('./handlers/khatma');
-const { readAll, clearAll }                                                  = require('./utils/storage');
+const { Client, GatewayIntentBits, MessageFlags } = require('discord.js');
+const { registerCommands }                                                = require('./commands');
+const { handleKhatmaCommand, handleKhatmaButton, handleKhatmaSelectMenu } = require('./handlers/khatma');
 
 // ─── Client Discord ───────────────────────────────────────────────────────────
 
@@ -27,125 +25,27 @@ const client = new Client({
   ],
 });
 
-// ── Helpers commandes professeure ─────────────────────────────────────────────
-
-function isProfesseure(interaction) {
-  return interaction.member?.roles.cache.some(r => r.name === 'professeure-tome1') ?? false;
-}
-
-async function rejectNotProfesseure(interaction) {
-  await interaction.reply({
-    content: '❌ Cette commande est réservée aux membres avec le rôle **professeure-tome1**.',
-    flags:   MessageFlags.Ephemeral,
-  });
-}
-
-function scoreEmoji(pct) {
-  if (pct === 100) return '🏆';
-  if (pct >= 85)   return '🌟';
-  if (pct >= 60)   return '📚';
-  return '💪';
-}
-
 // ─── Routage des interactions ─────────────────────────────────────────────────
 
 client.on('interactionCreate', async interaction => {
   try {
-    const userId   = interaction.user.id;
-    const username = interaction.member?.displayName ?? interaction.user.username;
-
-    // ── Commandes slash ────────────────────────────────────────────────────────
     if (interaction.isChatInputCommand()) {
       const cmd = interaction.commandName;
-
-      if (cmd === 'ping') {
-        await interaction.reply({ content: `🏓 Pong ! Bot opérationnel — ${new Date().toLocaleTimeString('fr-FR')}`, flags: MessageFlags.Ephemeral });
-        return;
-      }
 
       if (cmd === 'khatma') {
         await handleKhatmaCommand(interaction);
         return;
       }
-
-      if (cmd === 'qcm') {
-        await handleQcmCommand(interaction);
-        return;
-      }
-
-      if (cmd === 'resultats') {
-        if (!isProfesseure(interaction)) { await rejectNotProfesseure(interaction); return; }
-        await interaction.deferReply({ flags: MessageFlags.Ephemeral });
-        const data  = readAll(interaction.options.getString('lecon') ?? '');
-        const lines = Object.values(data).flatMap(info => {
-          if (!info.sessions.length) return [];
-          const derniere = info.sessions.at(-1);
-          const moy = Math.round(info.sessions.reduce((a, s) => a + s.pct, 0) / info.sessions.length);
-          return [`${scoreEmoji(derniere.pct)} **${info.username}** — Dernière : ${derniere.score}/${derniere.total} (${derniere.pct}%) | Moy : ${moy}% | Essais : ${info.sessions.length}`];
-        });
-        if (!lines.length) { await interaction.editReply('Aucun résultat enregistré.'); return; }
-        await interaction.editReply({
-          embeds: [
-            new EmbedBuilder()
-              .setTitle('📊  Récapitulatif')
-              .setDescription(lines.join('\n'))
-              .setColor(0x1C2833)
-              .setTimestamp()
-              .setFooter({ text: `${lines.length} élève(s) enregistrée(s)` })
-          ],
-        });
-        return;
-      }
-
-      if (cmd === 'detail') {
-        if (!isProfesseure(interaction)) { await rejectNotProfesseure(interaction); return; }
-        await interaction.deferReply({ flags: MessageFlags.Ephemeral });
-        const membre = interaction.options.getUser('eleve');
-        const data   = readAll(interaction.options.getString('lecon') ?? '');
-        const info   = data[membre.id];
-        if (!info) { await interaction.editReply(`Aucun résultat pour **${membre.username}**.`); return; }
-        const embed = new EmbedBuilder().setTitle(`🔍  Détail — ${info.username}`).setColor(0xE67E22);
-        for (const s of info.sessions.slice(-3)) {
-          const errs = s.erreurs.length
-            ? s.erreurs.map(e => `• ${e.reponseDonnee} ✗ → ${e.bonneReponse}`).join('\n')
-            : '✅ Aucune erreur !';
-          embed.addFields({ name: `${s.date} — ${s.lecon} — ${s.score}/${s.total} (${s.pct}%)`, value: errs, inline: false });
-        }
-        await interaction.editReply({ embeds: [embed] });
-        return;
-      }
-
-      if (cmd === 'reinitialiser_qcm') {
-        if (!isProfesseure(interaction)) { await rejectNotProfesseure(interaction); return; }
-        clearAll();
-        await interaction.reply({ content: '🗑️ Tous les résultats ont été effacés.', flags: MessageFlags.Ephemeral });
-        return;
-      }
-
     }
 
-    // ── Boutons ────────────────────────────────────────────────────────────────
     if (interaction.isButton()) {
       const id = interaction.customId;
-
       if (id.startsWith('khatma_')) {
         await handleKhatmaButton(interaction);
         return;
       }
-
-      if (id.startsWith('qcm_start_')) {
-        await handleQcmStart(interaction, id.replace('qcm_start_', ''));
-        return;
-      }
-
-      if (id.startsWith('qcm_answer_')) {
-        await handleQcmAnswer(interaction, parseInt(id.replace('qcm_answer_', ''), 10));
-        return;
-      }
-
     }
 
-    // ── Menus déroulants ───────────────────────────────────────────────────────
     if (interaction.isStringSelectMenu() && interaction.customId.startsWith('khatma_')) {
       await handleKhatmaSelectMenu(interaction);
     }
@@ -186,10 +86,9 @@ http.createServer((req, res) => {
   const uptime = Math.floor(process.uptime());
   const ws     = client.ws?.status ?? 'unknown';
   res.writeHead(200);
-  res.end(`v5 discord=${status} ws=${ws} uptime=${uptime}s guilds=${client.guilds.cache.size}`);
+  res.end(`v6 discord=${status} ws=${ws} uptime=${uptime}s guilds=${client.guilds.cache.size}`);
 }).listen(PORT, () => {
   console.log(`🌐 Serveur HTTP sur le port ${PORT}`);
-  // Ping toutes les 10 min — bien en dessous de la limite de 15 min de Render
   setInterval(() => {
     https.get(SELF_URL, () => {}).on('error', e => console.warn('⚠️ Self-ping échoué :', e.message));
   }, 10 * 60 * 1000);

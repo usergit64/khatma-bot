@@ -158,8 +158,8 @@ async function handleKhatmaButton(interaction) {
       khatma.listeners.push({ userId, username, joinedAt: new Date().toISOString() });
     }
     save(interaction.guildId, khatma);
-    await updateKhatmaMessage(khatma, interaction.guild);
     await interaction.reply({ content: '🌺 Tu as été ajoutée à la liste des auditrices !', flags: MessageFlags.Ephemeral });
+    updateKhatmaMessage(khatma, interaction.guild).catch(() => {});
     return;
   }
 
@@ -173,8 +173,8 @@ async function handleKhatmaButton(interaction) {
     if (p) {
       p.status = 'indisponible';
       save(interaction.guildId, khatma);
-      await updateKhatmaMessage(khatma, interaction.guild);
       await interaction.reply({ content: '⏸️ Marquée indisponible.', flags: MessageFlags.Ephemeral });
+      updateKhatmaMessage(khatma, interaction.guild).catch(() => {});
     } else {
       await interaction.reply({ content: '❌ Tu ne fais pas partie de la liste.', flags: MessageFlags.Ephemeral });
     }
@@ -187,8 +187,8 @@ async function handleKhatmaButton(interaction) {
       p.status   = 'actif';
       p.username = username;
       save(interaction.guildId, khatma);
-      await updateKhatmaMessage(khatma, interaction.guild);
       await interaction.reply({ content: '✅ Tu es de nouveau active !', flags: MessageFlags.Ephemeral });
+      updateKhatmaMessage(khatma, interaction.guild).catch(() => {});
     } else {
       await interaction.reply({ content: '❌ Tu ne fais pas partie de la liste.', flags: MessageFlags.Ephemeral });
     }
@@ -223,11 +223,11 @@ async function handleKhatmaSelectMenu(interaction) {
       khatma.participants.push({ userId, username, niveau, pages, status: 'actif', joinedAt: new Date().toISOString() });
     }
     save(interaction.guildId, khatma);
-    await updateKhatmaMessage(khatma, interaction.guild);
     await interaction.update({
       content:    `✅ C'est noté ! Tu vas lire **${formatPages(pages)}** à chaque passage.\nBienvenue dans la khatma 🤍✨`,
       components: [],
     });
+    updateKhatmaMessage(khatma, interaction.guild).catch(() => {});
   }
 }
 

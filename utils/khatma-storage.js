@@ -1,7 +1,12 @@
-const fs = require('fs');
+const fs   = require('fs');
+const path = require('path');
 
-const DATA_DIR  = fs.existsSync('/data') ? '/data' : '/app';
-const DATA_FILE = `${DATA_DIR}/khatma.json`;
+const DATA_DIR  = fs.existsSync('/data') ? '/data'
+                : fs.existsSync('/app')  ? '/app'
+                : path.join(__dirname, '..', 'data');
+const DATA_FILE = path.join(DATA_DIR, 'khatma.json');
+
+if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
 
 const DEFAULT = () => ({
   participants:   [],
