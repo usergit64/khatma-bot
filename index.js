@@ -21,7 +21,6 @@ const { handleKhatmaCommand, handleKhatmaButton, handleKhatmaSelectMenu } = requ
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
-    GatewayIntentBits.GuildMembers,
   ],
 });
 
