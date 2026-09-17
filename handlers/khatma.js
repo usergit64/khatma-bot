@@ -153,13 +153,14 @@ async function handleKhatmaButton(interaction) {
   const khatma   = load(interaction.guildId);
 
   if (id === 'khatma_ecoute') {
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
     khatma.participants = khatma.participants.filter(p => p.userId !== userId);
     if (!khatma.listeners.find(l => l.userId === userId)) {
       khatma.listeners.push({ userId, username, joinedAt: new Date().toISOString() });
     }
     save(interaction.guildId, khatma);
-    await interaction.reply({ content: '🌺 Tu as été ajoutée à la liste des auditrices !', flags: MessageFlags.Ephemeral });
-    updateKhatmaMessage(khatma, interaction.guild).catch(() => {});
+    await updateKhatmaMessage(khatma, interaction.guild);
+    await interaction.editReply({ content: '🌺 Tu as été ajoutée à la liste des auditrices !' });
     return;
   }
 
@@ -170,28 +171,30 @@ async function handleKhatmaButton(interaction) {
 
   if (id === 'khatma_indisponible') {
     const p = khatma.participants.find(p => p.userId === userId);
-    if (p) {
-      p.status = 'indisponible';
-      save(interaction.guildId, khatma);
-      await interaction.reply({ content: '⏸️ Marquée indisponible.', flags: MessageFlags.Ephemeral });
-      updateKhatmaMessage(khatma, interaction.guild).catch(() => {});
-    } else {
+    if (!p) {
       await interaction.reply({ content: '❌ Tu ne fais pas partie de la liste.', flags: MessageFlags.Ephemeral });
+      return;
     }
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+    p.status = 'indisponible';
+    save(interaction.guildId, khatma);
+    await updateKhatmaMessage(khatma, interaction.guild);
+    await interaction.editReply({ content: '⏸️ Marquée indisponible.' });
     return;
   }
 
   if (id === 'khatma_redevenir_actif') {
     const p = khatma.participants.find(p => p.userId === userId);
-    if (p) {
-      p.status   = 'actif';
-      p.username = username;
-      save(interaction.guildId, khatma);
-      await interaction.reply({ content: '✅ Tu es de nouveau active !', flags: MessageFlags.Ephemeral });
-      updateKhatmaMessage(khatma, interaction.guild).catch(() => {});
-    } else {
+    if (!p) {
       await interaction.reply({ content: '❌ Tu ne fais pas partie de la liste.', flags: MessageFlags.Ephemeral });
+      return;
     }
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+    p.status   = 'actif';
+    p.username = username;
+    save(interaction.guildId, khatma);
+    await updateKhatmaMessage(khatma, interaction.guild);
+    await interaction.editReply({ content: '✅ Tu es de nouveau active !' });
   }
 }
 
@@ -215,6 +218,11 @@ async function handleKhatmaSelectMenu(interaction) {
     const niveau = (tempUserData.get(userId) ?? {}).niveau ?? 'intermediaire';
     tempUserData.delete(userId);
 
+    await interaction.update({
+      content:    `✅ C'est noté ! Tu vas lire **${formatPages(pages)}** à chaque passage.\nBienvenue dans la khatma 🤍✨`,
+      components: [],
+    });
+
     khatma.listeners = khatma.listeners.filter(l => l.userId !== userId);
     const existing   = khatma.participants.find(p => p.userId === userId);
     if (existing) {
@@ -223,11 +231,7 @@ async function handleKhatmaSelectMenu(interaction) {
       khatma.participants.push({ userId, username, niveau, pages, status: 'actif', joinedAt: new Date().toISOString() });
     }
     save(interaction.guildId, khatma);
-    await interaction.update({
-      content:    `✅ C'est noté ! Tu vas lire **${formatPages(pages)}** à chaque passage.\nBienvenue dans la khatma 🤍✨`,
-      components: [],
-    });
-    updateKhatmaMessage(khatma, interaction.guild).catch(() => {});
+    await updateKhatmaMessage(khatma, interaction.guild);
   }
 }
 
